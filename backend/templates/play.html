@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Playback and Snapshots</title>
+    <style>
+      #snapshotContainer {
+        display: flex; /* Flexboxを使う */
+        flex-wrap: wrap; /* 要素がコンテナの幅を超えたら折り返す */
+        justify-content: space-around; /* スペースを均等に配置 */
+      }
+      .snapshot {
+        flex: 1 1 30%; /* 各要素がコンテナの約30%の幅を取るように設定 */
+        margin: 10px; /* 余白を設定 */
+        box-sizing: border-box; /* paddingとborderをwidthとheightに含める */
+      }
+      .snapshot img {
+        width: 100%; /* 画像がコンテナの幅に合わせて伸縮 */
+        height: auto; /* 高さは自動調整 */
+      }
+      #videoPlayer {
+        width: 100%;
+        max-width: 640px;
+        margin-bottom: 20px;
+      }
+      form {
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="{{ url_for('index') }}">動画リストに戻る</a>
+    <br />
+    <!-- <video id="videoPlayer" controls>
+      <source
+        src="{{ url_for('static', filename='videos/' + session['filename']) }}"
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video> -->
+    <a href="{{ url_for('video_feed', filename=session['filename']) }}"
+      >リアルタイム作成(再生が遅いです)</a>
+    <br>
+    <a href="{{ url_for('video_play', filename=session['filename']) }}"
+      >作成(時間がかかります)</a>
+    <form action="{{ url_for('process_form') }}" method="post">
+      <label for="start"></label>
+      <input type="number" id="start" name="start" min="0" value="0" />
+      秒目から一秒ずつのスナップショットを撮っています
+      <button type="submit">更新</button>
+    </form>
+    <div id="snapshotContainer">
+      {% for url in videos_url %}
+      <div class="snapshot">
+        <a href="{{ url_for('person_name_input', filename=url.split('/')[-1]) }}">
+          <img
+            src="{{ url_for('static', filename='images/' + url.split('/')[-1]) }}"
+            alt="Snapshot at {{ loop.index0 }}"
+          />
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

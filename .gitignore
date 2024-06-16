@@ -1,0 +1,11 @@
+*.pdf
+
+backend/uploads
+
+*.md
+
+backend/static/data/*
+backend/static/images/*
+backend/static/images_org/*
+backend/static/videos/*
+.DS_Store

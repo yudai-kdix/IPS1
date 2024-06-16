@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Person Name Input</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <!-- 画像の表示 -->
+    <div>
+      <img
+        src="{{ url_for('static', filename='images/' + photo_name) }}"
+        alt="Person's photo"
+        style="width: 800px"
+      />
+    </div>
+
+    <!-- 名前入力フォーム -->
+    <form
+      action="{{ url_for('person_name_input', filename=photo_name) }}"
+      method="post"
+    >
+      <!-- <label for="personName">Person's Name:</label>
+      <input type="text" id="personName" name="personName" required />
+      <button type="submit">Submit</button>-->
+
+      <input type="hidden" name="image_url" value="{{photo_name}}" />
+      {% for face_location in face_locations %}
+
+      <label for="{{face_location}}">{{face_location}}:</label>
+      <input
+        type="text"
+        id="{{face_location}}"
+        name="{{face_location}}"
+      /><br />
+      {% endfor %}
+      <button type="submit">Submit</button>
+    </form>
+
+
+    </form>
+  </body>
+</html>

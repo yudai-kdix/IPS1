@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Video Upload</title>
+  </head>
+  <body>
+    <h2>動画アップロード</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" />
+      <input type="submit" value="Upload" />
+    </form>
+    <h1>動画ファイルリスト</h1>
+    {% for video in video_name %}
+      ・<a href="play/{{video}}">{{ video }}</a>
+      <br />
+    {% endfor %}
+  </body>
+</html>
