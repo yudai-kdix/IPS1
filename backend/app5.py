@@ -14,12 +14,31 @@ app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
 UPLOAD_FOLDER = 'uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+UPLOAD_FOLDER_STATIC = 'static'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+if not os.path.exists(UPLOAD_FOLDER_STATIC):
+    os.makedirs(UPLOAD_FOLDER_STATIC)
 face_locations_list = {f'frame_{i:02}.jpg': [] for i in range(9)}
 
-
-
+def save_thumbnail(video_name):
+    video_path = os.path.join(app.config['UPLOAD_FOLDER'], video_name)
+    video = cv2.VideoCapture(video_path)
+    ret, frame = video.read()
+    if ret:
+        thumbnail_path = UPLOAD_FOLDER_STATIC + "/thumbnail/" + video_name.replace('.mp4', '.jpg')
+        cv2.imwrite(thumbnail_path, frame)
+        return thumbnail_path
+    return None
+# 既存の動画ファイルでサムネイルが無い場合、サムネイルを作成 ある場合処理しない
+files = os.listdir(UPLOAD_FOLDER)
+file_names = [f for f in files if os.path.isfile(os.path.join(UPLOAD_FOLDER, f))]
+for file_name in file_names:
+    thumbnail_path = UPLOAD_FOLDER_STATIC + "/thumbnail/" + file_name.replace('.mp4', '.jpg')
+    if not os.path.exists(thumbnail_path):
+        save_thumbnail(file_name)
+print("サムネイル作成完了")
 # @app.route('/')
 # def index():
 #     files = os.listdir(UPLOAD_FOLDER)
@@ -57,6 +76,16 @@ def update():
         file_names = [f for f in files if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], f))]
         return jsonify(file_names)
     
+
+# サムネイルのパスを取得
+@app.route('/thumbnail/<video_name>')
+def get_thumbnail(video_name):
+    thumbnail_path = UPLOAD_FOLDER_STATIC + "/thumbnail/" + video_name.replace('.mp4', '.jpg')
+    if not os.path.exists(thumbnail_path):
+        thumbnail_path = save_thumbnail(video_name)
+    return send_from_directory(UPLOAD_FOLDER_STATIC + "/thumbnail", video_name.replace('.mp4', '.jpg'))
+
+
 
 @app.route('/play/<filename>')
 def uploaded_file(filename):
