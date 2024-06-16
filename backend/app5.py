@@ -31,6 +31,7 @@ def save_thumbnail(video_name):
         cv2.imwrite(thumbnail_path, frame)
         return thumbnail_path
     return None
+
 # 既存の動画ファイルでサムネイルが無い場合、サムネイルを作成 ある場合処理しない
 files = os.listdir(UPLOAD_FOLDER)
 file_names = [f for f in files if os.path.isfile(os.path.join(UPLOAD_FOLDER, f))]
