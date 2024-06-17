@@ -1,13 +1,21 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 
 function VideoFrames() {
   const [imageUrls, setImageUrls] = useState([]);
   const [loading, setLoading] = useState(true);
   let { filename } = useParams();
-  useEffect(() => {
 
+  useEffect(() => {
     axios
       .get(`http://127.0.0.1:5000/play/${filename}`)
       .then((response) => {
@@ -19,56 +27,58 @@ function VideoFrames() {
         setLoading(false);
       });
   }, []);
-  if (loading)
+
+  if (loading) {
     return (
-      <div>
-        <h1>Processed Video Frames</h1>
-        <video id="videoPlayer" style={{width: '50%' }} controls >
+      <Box sx={{ p: 2 }}>
+        <video id="videoPlayer" style={{ width: "70%" }} controls>
           <source
             src={"http://127.0.0.1:5000/uploads/" + filename}
             type="video/mp4"
           />
           Your browser does not support the video tag.
         </video>
-        <p>Loading...</p>
-      </div>
+        <Typography variant="body1">Loading...</Typography>
+      </Box>
     );
+  }
 
   return (
-    <div>
-      <h1>Processed Video Frames</h1>
-      <video id="videoPlayer" style={{ width: "50%" }} controls>
+    <Box sx={{ p: 2 }}>
+      <video id="videoPlayer" style={{ width: "70%" }} controls>
         <source
           src={"http://127.0.0.1:5000/uploads/" + filename}
           type="video/mp4"
         />
         Your browser does not support the video tag.
       </video>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-around",
-        }}
-      >
+      <Grid container spacing={2}>
         {imageUrls.map((url, index) => (
-          <Link
-            to={`/person_name_input/frame_0${index}.jpg`}
-            key={index}
-            style={{ width: "30%", margin: "10px" }}
-          >
-            {" "}
-            {/* リンク先を指定 */}
-            <img
-              key={index}
-              src={"http://127.0.0.1:5000" + url}
-              alt={`Frame ${index}`}
-              style={{ width: "100%", margin: "10px" }}
-            />
-          </Link>
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Card sx={{ maxWidth: 345, boxShadow: 3 }}>
+              <CardMedia
+                component="img"
+                height="140"
+                image={`http://127.0.0.1:5000${url}`}
+                alt={`Frame ${index}`}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Frame {index + 1}
+                </Typography>
+              </CardContent>
+              <Link
+                href={`/person_name_input/frame_0${index}.jpg`}
+                variant="body2"
+                color="text.primary"
+              >
+                View Details
+              </Link>
+            </Card>
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Box>
   );
 }
 
