@@ -9,6 +9,10 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function VideoFrames() {
   const [frames, setFrames] = useState([]);
@@ -69,26 +73,23 @@ function VideoFrames() {
       <Grid container spacing={2}>
         {frames.map((frame, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ maxWidth: 345, boxShadow: 3 }}>
-              <CardMedia
-                component="img"
-                height="140"
-                src={`data:image/jpeg;base64,${frame}`}
-                alt={`Frame ${index}`}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Frame {index + 1}
-                </Typography>
-              </CardContent>
-              {/* <Link
-                href={`/person_name_input/frame_0${index}.jpg`}
-                variant="body2"
-                color="text.primary"
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel${index}a-content`}
+                id={`panel${index}a-header`}
               >
-                View Details
-              </Link> */}
-            </Card>
+                <Typography>フレーム {index + 1}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  src={`data:image/jpeg;base64,${frame}`}
+                  alt={`フレーム ${index}`}
+                />
+              </AccordionDetails>
+            </Accordion>
           </Grid>
         ))}
       </Grid>

@@ -36,6 +36,8 @@ def upload_video():
     else:
         video = Video(name=filename, path=filepath)
     video.save()  # データベースにビデオ情報を保存
+    # データベースに保存してないのでidがなかった
+    video = Video.find_by_name(filename)
     save_thumbnail(filename)  # サムネイルを保存
     # 9枚の1秒感覚のフレームを作成し、それらをstatic/frame/id/に保存 ファイル名は0.jpg, 1.jpg, ..., 8.jpg
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -43,6 +45,8 @@ def upload_video():
     for i in range(9):
         ret, frame = video_capture.read()
         if ret:
+            if not os.path.exists(UPLOAD_FOLDER_STATIC + "/frame/" + str(video.id)):
+                os.makedirs(UPLOAD_FOLDER_STATIC + "/frame/" + str(video.id))
             frame_path = UPLOAD_FOLDER_STATIC + "/frame/" + str(video.id) + "/" + str(i) + ".jpg"
             tmp = face_find(frame)
             cv2.imwrite(frame_path, tmp['img'])
@@ -80,7 +84,7 @@ def get_video(video_id):
 def play_video(video_id):
     video = Video.find_by_id(video_id)
     if video:
-        return send_file(video.path)
+        return send_file('uploads/' + video.name)
     else:
         return jsonify({'message': 'Video not found'}), 404
 

@@ -40,3 +40,16 @@ class Face:
         results = DatabaseHelper.find_all('faces')
         for result in results:
             yield Face(id=result['id'], name=result['name'], facevec=result['facevec'],user_id=result['user_id'],video_id=result['video_id'])
+
+        
+    @staticmethod
+    def find_by_user_id(user_id):
+        results = DatabaseHelper.find_by_user_id('faces', user_id)
+        for result in results:
+            yield Face(id=result['id'], name=result['name'], facevec=result['facevec'],user_id=result['user_id'],video_id=result['video_id'])
+
+    @staticmethod
+    def find_by_video_id(video_id):
+        results = DatabaseHelper.find_by_video_id('faces', video_id)
+        for result in results:
+            yield Face(id=result['id'], name=result['name'], facevec=result['facevec'],user_id=result['user_id'],video_id=result['video_id'])
