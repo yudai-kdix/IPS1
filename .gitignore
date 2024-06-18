@@ -11,3 +11,4 @@ backend/static/videos/*
 backend/static/thumbnail/*
 .DS_Store
 
+*.jpg
