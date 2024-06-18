@@ -54,14 +54,14 @@ function App() {
               {/* ルートページで動画ファイルのリストを表示 */}
               <Route path="/upload" element={<FileUpload />} />
               {/* ファイルアップロードページ */}
-              <Route path="/play/:filename" element={<VideoFrames />} />
+              <Route path="/video/:id" element={<VideoFrames />} />
               {/* 特定のファイルに対する処理済みフレームを表示 */}
               <Route
                 path="/person_name_input/:filename"
                 element={<PersonNameInput />}
               />
               {/* 顔データに名前を入力するページ */}
-              <Route path="/video/:id" element={<VideoPlayer />} />
+              {/* <Route path="/video/:id" element={<VideoPlayer />} /> */}
               <Route path="/video_feed/:filename" element={<VideoStream />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<Register />} />
