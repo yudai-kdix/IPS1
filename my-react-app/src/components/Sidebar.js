@@ -10,6 +10,8 @@ const Sidebar = ({ open, toggleDrawer }) => {
     { text: "Home", path: "/" }, // Homeページへのパスを"/"とする
     { text: "Login", path: "/login" }, // Loginページへのパスを"/login"とする
     { text: "Register", path: "/register" }, // Registerページへのパスを"/register"とする
+    { text: "Upload", path: "/upload" }, // Uploadページへのパスを"/upload"とする
+    
   ];
 
   return (

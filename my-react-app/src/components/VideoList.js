@@ -47,7 +47,7 @@ function VideoList() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5000/api/videos")
+      .get("http://127.0.0.1:5000/videos")
       .then((response) => {
         setVideos(response.data);
       })
@@ -69,17 +69,17 @@ function VideoList() {
       <Grid container spacing={2} style={{ padding: 20 }}>
         {videos.map((video, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <CardActionArea href={`play/${video}`}>
+            <CardActionArea href={`video/${video.id}`}>
               <Card sx={{ maxWidth: 345, minHeight: 200 }}>
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`http://127.0.0.1:5000/thumbnail/${video}`}
+                  image={`http://127.0.0.1:5000/thumbnail/${video.name}`}
                   alt="動画サムネイル"
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    {video}
+                    {video.name}
                   </Typography>
                 </CardContent>
               </Card>

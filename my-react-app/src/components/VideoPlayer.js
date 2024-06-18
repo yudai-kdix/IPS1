@@ -3,7 +3,7 @@ import ReactPlayer from "react-player";
 import { Paper, IconButton, Slider, Typography } from "@mui/material";
 import { PlayArrow, Pause} from "@mui/icons-material";
 
-function VideoPlayer({ url }) {
+function VideoPlayer({ id }) {
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.8);
   const [played, setPlayed] = useState(0);

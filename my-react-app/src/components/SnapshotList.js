@@ -11,15 +11,15 @@ import {
 } from "@mui/material";
 
 function VideoFrames() {
-  const [imageUrls, setImageUrls] = useState([]);
+  const [image, setImage] = useState([]);
   const [loading, setLoading] = useState(true);
-  let { filename } = useParams();
+  let { id } = useParams();
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:5000/play/${filename}`)
+      .get(`http://127.0.0.1:5000/get_frames/${id}`)
       .then((response) => {
-        setImageUrls(response.data);
+        setImage(response.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -33,7 +33,7 @@ function VideoFrames() {
       <Box sx={{ p: 2 }}>
         <video id="videoPlayer" style={{ width: "70%" }} controls>
           <source
-            src={"http://127.0.0.1:5000/uploads/" + filename}
+            src={"http://127.0.0.1:5000/play_video/" + id}
             type="video/mp4"
           />
           Your browser does not support the video tag.
@@ -47,7 +47,7 @@ function VideoFrames() {
     <Box sx={{ p: 2 }}>
       <video id="videoPlayer" style={{ width: "70%" }} controls>
         <source
-          src={"http://127.0.0.1:5000/uploads/" + filename}
+          src={"http://127.0.0.1:5000/uploads/" + id}
           type="video/mp4"
         />
         Your browser does not support the video tag.

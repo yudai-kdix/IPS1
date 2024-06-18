@@ -10,21 +10,22 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from backend import app
 from backend.controller import user_controller
+from backend.controller import video_controller
 
 load_dotenv()
 
 CORS(app)
 
 logging.basicConfig(level=logging.DEBUG)
-
+UPLOAD_FOLDER = 'backend/uploads'
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALGORITHM'] = os.environ['ALGORITHM']
 
-UPLOAD_FOLDER = 'uploads'
+
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
-UPLOAD_FOLDER_STATIC = 'static'
+UPLOAD_FOLDER_STATIC = 'backend/static'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER_STATIC):
     os.makedirs(UPLOAD_FOLDER_STATIC)
@@ -49,9 +50,6 @@ for file_name in file_names:
         save_thumbnail(file_name)
 print("サムネイル作成完了")
 
-@app.route('/test')
-def test():
-    return jsonify({'message': 'Hello, World!'})
 
 # @app.route('/')
 # def index():
@@ -60,10 +58,9 @@ def test():
 
 #     return render_template('index.html', video_name=file_name)
 
-# "GET /uploads/test.mp4
 @app.route('/uploads/<filename>')
 def get_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory('uploads', filename)
 
 @app.route('/api/videos')
 def index():
@@ -94,10 +91,10 @@ def update():
 # サムネイルのパスを取得
 @app.route('/thumbnail/<video_name>')
 def get_thumbnail(video_name):
-    thumbnail_path = UPLOAD_FOLDER_STATIC + "/thumbnail/" + video_name.replace('.mp4', '.jpg')
-    if not os.path.exists(thumbnail_path):
-        thumbnail_path = save_thumbnail(video_name)
-    return send_from_directory(UPLOAD_FOLDER_STATIC + "/thumbnail", video_name.replace('.mp4', '.jpg'))
+    # thumbnail_path = UPLOAD_FOLDER_STATIC + "/thumbnail/" + video_name.replace('.mp4', '.jpg')
+    # if not os.path.exists(thumbnail_path):
+    #     thumbnail_path = save_thumbnail(video_name)
+    return send_from_directory("static" + "/thumbnail", video_name.replace('.mp4', '.jpg'))
 
 
 

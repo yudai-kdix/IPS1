@@ -61,7 +61,7 @@ function App() {
                 element={<PersonNameInput />}
               />
               {/* 顔データに名前を入力するページ */}
-              <Route path="/video/:filename" element={<VideoPlayer />} />
+              <Route path="/video/:id" element={<VideoPlayer />} />
               <Route path="/video_feed/:filename" element={<VideoStream />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<Register />} />
