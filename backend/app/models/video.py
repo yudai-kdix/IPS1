@@ -6,6 +6,8 @@ class Video:
         self.id = id
         self.name = name
         self.path = path
+        self.user_id = user_id
+
 
     def save(self):
         if self.id is None:
@@ -33,6 +35,11 @@ class Video:
             return Video(id=result['id'], name=result['name'], path=result['path'])
         return None
     
+    @staticmethod
+    def find_by_user_id(user_id):
+        results = DatabaseHelper.find_by_user_id('videos', user_id)
+        for result in results:
+            yield Video(id=result['id'], name=result['name'], path=result['path'], user_id=result['user_id'])
     @staticmethod
     def find_all():
         results = DatabaseHelper.find_all('videos')

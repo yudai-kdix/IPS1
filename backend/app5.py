@@ -6,12 +6,16 @@ import numpy as np
 import pandas as pd
 from flask import Flask, Response, request, send_from_directory, session, jsonify
 from flask_cors import CORS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['ALGORITHM'] = os.environ['ALGORITHM']
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):

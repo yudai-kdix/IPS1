@@ -1,5 +1,5 @@
 from backend.app.services.database_helper import DatabaseHelper
-
+from werkzeug.security import check_password_hash
 
 class User:
     def __init__(self, id=None, name=None, password=None):
@@ -39,4 +39,6 @@ class User:
         for result in results:
             yield User(id=result['id'], name=result['name'], password=result['password'])
 
-    
+
+    def check_password(self, password):
+        return check_password_hash(self.password,password)
