@@ -1,4 +1,4 @@
-from backend.app.services.database_helper import DatabaseHelper
+from services.database_helper import DatabaseHelper
 from werkzeug.security import check_password_hash
 
 class User:

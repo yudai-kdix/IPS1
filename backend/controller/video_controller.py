@@ -2,9 +2,9 @@ from flask import request, jsonify
 import os
 from werkzeug.utils import secure_filename
 
-from backend.app.controller.user_controller import UserController
-from backend.app.models.video import Video
-from backend.app import app
+from controller.user_controller import UserController
+from backend.models.video import Video
+from backend import app
 
 class VideoController:
     @staticmethod

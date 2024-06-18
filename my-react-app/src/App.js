@@ -12,6 +12,9 @@ import TopBar from "./components/TopBar";
 import VideoList from "./components/VideoList";
 import VideoPlayer from "./components/VideoPlayer";
 import VideoStream from "./components/VideoStream";
+import LoginPage from "./components/LoginPage";
+import Register from "./components/RegisterPage";
+
 
 const theme = createTheme({
   palette: {
@@ -60,6 +63,8 @@ function App() {
               {/* 顔データに名前を入力するページ */}
               <Route path="/video/:filename" element={<VideoPlayer />} />
               <Route path="/video_feed/:filename" element={<VideoStream />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </div>
         </div>

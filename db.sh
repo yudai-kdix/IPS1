@@ -1,0 +1,1 @@
+psql -U postgres -d ips_flask -f backend/create_tables.sql

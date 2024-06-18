@@ -1,3 +1,4 @@
+import logging
 import os
 from time import sleep
 import cv2
@@ -7,11 +8,14 @@ import pandas as pd
 from flask import Flask, Response, request, send_from_directory, session, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+from backend import app
+from backend.controller import user_controller
 
 load_dotenv()
 
-app = Flask(__name__)
 CORS(app)
+
+logging.basicConfig(level=logging.DEBUG)
 
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -44,6 +48,11 @@ for file_name in file_names:
     if not os.path.exists(thumbnail_path):
         save_thumbnail(file_name)
 print("サムネイル作成完了")
+
+@app.route('/test')
+def test():
+    return jsonify({'message': 'Hello, World!'})
+
 # @app.route('/')
 # def index():
 #     files = os.listdir(UPLOAD_FOLDER)

@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2 import extras
 
+
 class DatabaseHelper:
     DB_NAME = 'ips_flask'
     USER = 'postgres'
@@ -18,10 +19,11 @@ class DatabaseHelper:
     def insert(cls, table, model):
         with cls.connect() as conn:
             with conn.cursor() as cur:
-                columns = ', '.join(model.__dict__.keys())
-                placeholders = ', '.join(f'%s' for _ in model.__dict__.values())
+                data = {key: value for key, value in model.__dict__.items() if value is not None and key != 'id'}
+                columns = ', '.join(data.keys())
+                placeholders = ', '.join(f'%s' for _ in data.values())
                 sql = f'INSERT INTO {table} ({columns}) VALUES ({placeholders})'
-                cur.execute(sql, tuple(model.__dict__.values()))
+                cur.execute(sql, tuple(data.values()))
                 conn.commit()
 
     @classmethod
