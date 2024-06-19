@@ -1,74 +1,100 @@
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function VideoFrames() {
-  const [imageUrls, setImageUrls] = useState([]);
+  const [frames, setFrames] = useState([]);
   const [loading, setLoading] = useState(true);
-  let { filename } = useParams();
-  useEffect(() => {
+  let { id } = useParams();
 
-    axios
-      .get(`http://127.0.0.1:5000/play/${filename}`)
-      .then((response) => {
-        setImageUrls(response.data);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://127.0.0.1:5000/get_frames/${id}`)
+  //     .then((response) => {
+  //       setImage(response.data);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching images:", error);
+  //       setLoading(false);
+  //     });
+  // }, []);
+  useEffect(() => {
+    const fetchFrames = async () => {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:5000/get_frames/${id}`
+        );
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching images:", error);
+        console.log(response.data);
+        setFrames(response.data);
+      } catch (error) {
+        console.error("Error fetching video frames:", error);
         setLoading(false);
-      });
-  }, []);
-  if (loading)
+      }
+    };
+    fetchFrames();
+  }, [id]);
+  if (loading) {
     return (
-      <div>
-        <h1>Processed Video Frames</h1>
-        <video id="videoPlayer" style={{width: '50%' }} controls >
+      <Box sx={{ p: 2 }}>
+        <video id="videoPlayer" style={{ width: "70%" }} controls>
           <source
-            src={"http://127.0.0.1:5000/uploads/" + filename}
+            src={"http://127.0.0.1:5000/play_video/" + id}
             type="video/mp4"
           />
           Your browser does not support the video tag.
         </video>
-        <p>Loading...</p>
-      </div>
+        <Typography variant="body1">Loading...</Typography>
+      </Box>
     );
+  }
 
   return (
-    <div>
-      <h1>Processed Video Frames</h1>
-      <video id="videoPlayer" style={{ width: "50%" }} controls>
+    <Box sx={{ p: 2 }}>
+      <video id="videoPlayer" style={{ width: "70%" }} controls>
         <source
-          src={"http://127.0.0.1:5000/uploads/" + filename}
+          src={"http://127.0.0.1:5000/play_video/" + id}
           type="video/mp4"
         />
         Your browser does not support the video tag.
       </video>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-around",
-        }}
-      >
-        {imageUrls.map((url, index) => (
-          <Link
-            to={`/person_name_input/frame_0${index}.jpg`}
-            key={index}
-            style={{ width: "30%", margin: "10px" }}
-          >
-            {" "}
-            {/* リンク先を指定 */}
-            <img
-              key={index}
-              src={"http://127.0.0.1:5000" + url}
-              alt={`Frame ${index}`}
-              style={{ width: "100%", margin: "10px" }}
-            />
-          </Link>
+      <Grid container spacing={2}>
+        {frames.map((frame, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel${index}a-content`}
+                id={`panel${index}a-header`}
+              >
+                <Typography>フレーム {index + 1}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  src={`data:image/jpeg;base64,${frame}`}
+                  alt={`フレーム ${index}`}
+                />
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Box>
   );
 }
 

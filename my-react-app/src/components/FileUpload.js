@@ -1,39 +1,82 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { Button, Container, TextField, Typography, Box } from "@mui/material";
+import { API_URL } from "../config/development";
+import apiClient from "../api/apiClient";
 
-function FileUpload({ setFiles }) {
-  const [file, setFile] = useState(null);
+function VideoUpload() {
+  const [videoName, setVideoName] = useState("");
+  const [videoFile, setVideoFile] = useState(null);
 
-  const onFileChange = (event) => {
-    setFile(event.target.files[0]);
+  const handleVideoChange = (event) => {
+    setVideoFile(event.target.files[0]);
   };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append("file", file);
+  const handleUpload = async () => {
+    if (!videoFile) {
+      alert("Please select a video file to upload.");
+      return;
+    }
 
-    axios
-      .post("http://http://127.0.0.1:5000/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log("File uploaded successfully");
-        setFiles(response.data); // 親コンポーネントから渡されたsetFilesを使ってファイルリストを更新
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-      });
+    const formData = new FormData();
+    formData.append("video", videoFile, videoFile.name);
+    formData.append("name", videoName);
+
+    try {
+      const response = await apiClient.post(
+        API_URL+"/upload_video",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response.data);
+      alert("Video uploaded successfully");
+    } catch (error) {
+      console.error("Failed to upload video:", error);
+      alert("Failed to upload video.");
+    }
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <input type="file" onChange={onFileChange} />
-      <button type="submit">Upload</button>
-    </form>
+    <Container component="main" maxWidth="xs">
+      <Typography component="h1" variant="h5" gutterBottom>
+        Upload Video
+      </Typography>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        label="Video Name"
+        value={videoName}
+        onChange={(e) => setVideoName(e.target.value)}
+        autoFocus
+      />
+      <Box sx={{ marginTop: 2 }}>
+        <input
+          accept="video/*"
+          style={{ display: "none" }}
+          id="raised-button-file"
+          type="file"
+          onChange={handleVideoChange}
+        />
+        <label htmlFor="raised-button-file">
+          <Button variant="outlined" component="span" sx={{ marginRight: 2 }}>
+            Choose Video
+          </Button>
+        </label>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleUpload}
+          sx={{ marginTop: 2 }}
+        >
+          Upload
+        </Button>
+      </Box>
+    </Container>
   );
 }
 
-export default FileUpload;
+export default VideoUpload;

@@ -1,49 +1,54 @@
-import HomeIcon from "@mui/icons-material/Home";
-import SettingsIcon from "@mui/icons-material/Settings";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton ,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
-import React from "react";
+import { Button, Drawer, List, ListItem, ListItemText } from "@mui/material";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 追加
+import TopBar from "./TopBar";
 
-function Sidebar() {
+
+const Sidebar = ({ open, toggleDrawer }) => {
+  const navigate = useNavigate(); // useNavigateフックを使用
+
+  const menuItems = [
+    { text: "Home", path: "/" }, // Homeページへのパスを"/"とする
+    { text: "Login", path: "/login" }, // Loginページへのパスを"/login"とする
+    { text: "Register", path: "/register" }, // Registerページへのパスを"/register"とする
+    { text: "Upload", path: "/upload" }, // Uploadページへのパスを"/upload"とする
+    {text: "FaceList", path: "/faces"}
+  ];
+
   return (
-    <Drawer
-      variant="permanent"
-      anchor="left"
-      sx={{ width: 240, flexShrink: 0 }}
-    >
-      <Typography variant="h6" sx={{ padding: 2 }}>
-        YouTube風アプリ
-      </Typography>
-      <List>
-        <ListItem button>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="ホーム" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <VideoLibraryIcon />
-          </ListItemIcon>
-          <ListItemText primary="動画ライブラリ" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary="設定" />
-        </ListItem>
-      </List>
-    </Drawer>
+    <>
+      <div style={{ paddingTop: "64px" }}>
+        <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
+          <div
+            style={{
+              width: "250px",
+              borderRight: "1px solid #ccc",
+              padding: "10px",
+            }}
+            role="presentation"
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+          >
+            <List>
+              {menuItems.map((item) => (
+                <ListItem
+                  button
+                  key={item.text}
+                  onClick={() => navigate(item.path)}
+                >
+                  {" "}
+                  {/* クリック時にnavigateを使用してページ遷移 */}
+                  <Button fullWidth>
+                    <ListItemText primary={item.text} />
+                  </Button>
+                </ListItem>
+              ))}
+            </List>
+          </div>
+        </Drawer>
+      </div>
+    </>
   );
-}
+};
 
 export default Sidebar;
