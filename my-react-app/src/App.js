@@ -14,6 +14,7 @@ import VideoPlayer from "./components/VideoPlayer";
 import VideoStream from "./components/VideoStream";
 import LoginPage from "./components/LoginPage";
 import Register from "./components/RegisterPage";
+import FaceList from "./components/FaceList";
 
 
 const theme = createTheme({
@@ -65,6 +66,7 @@ function App() {
               <Route path="/video_feed/:filename" element={<VideoStream />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/faces" element={<FaceList />} />
             </Routes>
           </div>
         </div>

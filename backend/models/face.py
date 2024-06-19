@@ -2,7 +2,7 @@ from services.database_helper import DatabaseHelper
 
 
 class Face:
-    def __init__(self, id=None, name=None, facevec=None, user_id=None,video_id=None):
+    def __init__(self, id=None, name='tmp', facevec=None, user_id=1,video_id=0):
         self.id = id
         self.name = name
         self.facevec = facevec
@@ -16,6 +16,8 @@ class Face:
         else:
             # 既存のユーザーの更新
             DatabaseHelper.update('faces', self)
+        # TODO 名前被りを考慮する。
+        self.id = DatabaseHelper.find_by_name('faces', self.name)['id']
 
     def delete(self):
         if self.id is not None:
@@ -48,8 +50,8 @@ class Face:
         for result in results:
             yield Face(id=result['id'], name=result['name'], facevec=result['facevec'],user_id=result['user_id'],video_id=result['video_id'])
 
-    @staticmethod
-    def find_by_video_id(video_id):
-        results = DatabaseHelper.find_by_video_id('faces', video_id)
-        for result in results:
-            yield Face(id=result['id'], name=result['name'], facevec=result['facevec'],user_id=result['user_id'],video_id=result['video_id'])
+    # @staticmethod
+    # def find_by_video_id(video_id):
+    #     results = DatabaseHelper.find_by_video_id('faces', video_id)
+    #     for result in results:
+    #         yield Face(id=result['id'], name=result['name'], facevec=result['facevec'],user_id=result['user_id'],video_id=result['video_id'])

@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from backend import app
 from backend.controller import user_controller
 from backend.controller import video_controller
+from backend.controller import face_controller
 
 load_dotenv()
 

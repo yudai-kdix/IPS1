@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 追加
 import TopBar from "./TopBar";
 
+
 const Sidebar = ({ open, toggleDrawer }) => {
   const navigate = useNavigate(); // useNavigateフックを使用
 
@@ -11,7 +12,7 @@ const Sidebar = ({ open, toggleDrawer }) => {
     { text: "Login", path: "/login" }, // Loginページへのパスを"/login"とする
     { text: "Register", path: "/register" }, // Registerページへのパスを"/register"とする
     { text: "Upload", path: "/upload" }, // Uploadページへのパスを"/upload"とする
-    
+    {text: "FaceList", path: "/faces"}
   ];
 
   return (

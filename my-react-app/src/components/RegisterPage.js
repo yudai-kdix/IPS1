@@ -9,16 +9,22 @@ function RegisterPage() {
 
   const handleRegister = async () => {
     try {
+      const response = await axios.post(
+        API_URL + "/signup",
+        {
+          username: username,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       // const response = await axios.post(API_URL + "/signup", {
-      //   data: { 'username':username, 'password':password },
-      //   headers: {
-      //     "Content-Type": "application/json", // サーバーが期待する形式に合わせる
-      //   },
+      //   username: username,
+      //   password: password,
       // });
-      const response = await axios.post(API_URL + "/signup", {
-        username: username,
-        password: password,
-      });
       console.log(response.data); // レスポンスを処理
       alert("Registration successful");
     } catch (error) {

@@ -38,7 +38,8 @@ function VideoFrames() {
           `http://127.0.0.1:5000/get_frames/${id}`
         );
         setLoading(false);
-        setFrames(response.data.frames);
+        console.log(response.data);
+        setFrames(response.data);
       } catch (error) {
         console.error("Error fetching video frames:", error);
         setLoading(false);

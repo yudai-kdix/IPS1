@@ -23,6 +23,7 @@ def login():
 
 
 @app.route('/signup', methods=['POST', 'OPTIONS'])
+@cross_origin()
 def signup():
     data = request.json
     print(data)
@@ -84,3 +85,6 @@ def get_user_id_from_token():
         if decoded:
             return decoded['user_id']
     return None
+
+
+

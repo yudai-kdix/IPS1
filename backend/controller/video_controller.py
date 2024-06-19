@@ -40,24 +40,32 @@ def upload_video():
     video = Video.find_by_name(filename)
     save_thumbnail(filename)  # サムネイルを保存
     # 9枚の1秒感覚のフレームを作成し、それらをstatic/frame/id/に保存 ファイル名は0.jpg, 1.jpg, ..., 8.jpg
+    # 1秒感覚のフレーム
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     video_capture = cv2.VideoCapture(video_path)
-    for i in range(9):
+    frameAll = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    framerate = int(video_capture.get(cv2.CAP_PROP_FPS))
+    count = 0
+    for i in range(1 * framerate, frameAll, framerate):
+        video_capture.set(cv2.CAP_PROP_POS_FRAMES, i)
         ret, frame = video_capture.read()
         if ret:
             if not os.path.exists(UPLOAD_FOLDER_STATIC + "/frame/" + str(video.id)):
                 os.makedirs(UPLOAD_FOLDER_STATIC + "/frame/" + str(video.id))
-            frame_path = UPLOAD_FOLDER_STATIC + "/frame/" + str(video.id) + "/" + str(i) + ".jpg"
+            frame_path = UPLOAD_FOLDER_STATIC + "/frame/" + str(video.id) + "/" + str(count) + ".jpg"
             tmp = face_find(frame)
             cv2.imwrite(frame_path, tmp['img'])
-            for facevec in tmp['face_vecs']:
+            for i in range(len(tmp['face_vecs'])):
                 if user_id:
-                    face = Face(facevec=facevec, user_id=user_id, video_id=video.id)
+                    face = Face(facevec=tmp['face_vecs'][i], user_id=user_id, video_id=video.id)
                     face.save()
+                    cv2.imwrite(UPLOAD_FOLDER_STATIC + "/face/" + str(face.id) + ".jpg", tmp['face_imgs'][i])
+
                 else:
-                    face = Face(facevec=facevec,user_id=1, video_id=video.id)
+                    face = Face(facevec=tmp['face_vecs'][i],user_id=1, video_id=video.id)
                     face.save()
-            
+                    cv2.imwrite(UPLOAD_FOLDER_STATIC + "/face/" + str(face.id) + ".jpg", tmp['face_imgs'][i])
+            count += 1
     video_capture.release()
     return jsonify({'message': 'Video uploaded successfully', 'path': filepath}), 201
 
@@ -148,18 +156,24 @@ def save_thumbnail(video_name):
 # また、顔の特徴量を取得し、Faceモデルインスタンスを作成し、データベースに保存
 # そして最初の画像に顔の位置を描画し、返す
 def face_find(img):
+    print("face_find")
     img_copy = img.copy()
     img_gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
     face_locations = face_recognition.face_locations(img_gray)
     face_encodings = face_recognition.face_encodings(img, face_locations)
     face_vecs = []
+    face_imgs = []
     for i, face_location in enumerate(face_locations):
         top, right, bottom, left = face_location
-        face = img[top:bottom, left:right]
-        face_path = UPLOAD_FOLDER_STATIC + "/face/" + str(i) + ".jpg"
-        cv2.imwrite(face_path, face)
+        face_img = img[top:bottom, left:right]
+        
+        # face_path = UPLOAD_FOLDER_STATIC + "/face/" + str(i) + ".jpg"
+        # cv2.imwrite(face_path, face_img)
         facevec = face_encodings[i].tostring()
         face_vecs.append(facevec)
-        face.save()
+        face_imgs.append(face_img)
+
+        # face = Face(facevec=facevec)
+        # face_img.save()
         cv2.rectangle(img_copy, (left, top), (right, bottom), (0, 0, 255), 2)
-    return {'img':img_copy,'face_vecs':face_vecs}
+    return {'img':img_copy,'face_vecs':face_vecs,'face_imgs':face_imgs}
